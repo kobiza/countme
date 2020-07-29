@@ -1,14 +1,31 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {addPlayer, removePlayer} from '../utils/playersDBUtils.js'
+import {pushPlayer, pushGuest, removePlayer, removeGuest} from '../utils/playersDBUtils.js'
 import Layout from './Layout.jsx'
 import AddPlayer from './AddPlayer.jsx'
 import PlayersList from './PlayersList.jsx'
-import {pushPlayer} from "../utils/playersDBUtils";
+
+const getPlayersToAdd = (playerNameText) => {
+    const parts = playerNameText.trim().split('+')
+    if (parts.length === 1) {
+        return [[parts[0]], []]
+    }
+
+    const [name, numberOfGuests] = parts.map(t => t.trim())
+
+    const guests = []
+    for (let i = 0 ; i < numberOfGuests; i++) {
+        guests.push(`חבר של ${name} - ${i + 1}`)
+    }
+
+    console.log('[[name], [guests]]', [[name], [guests]])
+    return [[name], guests]
+}
 
 function mapStateToProps(state) {
     return {
-        players: state.players
+        players: state.players,
+        guests: state.guests
     };
 }
 
@@ -22,7 +39,10 @@ class PlayersAddPage extends React.Component {
         };
 
         this.addPlayer = () => {
-            pushPlayer({name: this.state.playerName});
+            const [players, guests] = getPlayersToAdd(this.state.playerName)
+            _.forEach(players, playerName => pushPlayer({name: playerName}))
+            _.forEach(guests, guestName => pushGuest({name: guestName}))
+
             this.setState({playerName: ''});
         };
 
@@ -36,6 +56,14 @@ class PlayersAddPage extends React.Component {
 
         this.checkPlayer = (playerKey) => {
             removePlayer(playerKey)
+        }
+
+        this.removeGuest = (playerKey) => {
+            removeGuest(playerKey)
+        }
+
+        this.checkGuest = (playerKey) => {
+            removeGuest(playerKey)
         }
 
         this.addPlayerOnEnter = (event) => {
@@ -61,6 +89,12 @@ class PlayersAddPage extends React.Component {
                     items={this.props.players}
                     onItemCheck={idx => this.checkPlayer(idx)}
                     onItemRemove={idx => this.removePlayer(idx)}
+                />
+
+                <PlayersList
+                    items={this.props.guests}
+                    onItemCheck={idx => this.checkGuest(idx)}
+                    onItemRemove={idx => this.removeGuest(idx)}
                 />
             </Layout>
         )

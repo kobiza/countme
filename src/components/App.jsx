@@ -5,20 +5,20 @@ import Players from './PlayersAddPage.jsx'
 import { connect } from 'react-redux';
 import RTL from './hoc/RTL.jsx';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import {fetchPlayers, registerForPlayersChange, registerForPlayerAdded, registerForPlayerRemoved, listenToPlayers} from '../redux/actions/playersAsyncActions'
+import {listenToPlayers} from '../redux/actions/playersAsyncActions'
+import {listenToGuests} from '../redux/actions/guestsAsyncActions'
 
 const mapDispatchToProps = (dispatch) => ({
     listenToPlayers: () => dispatch(listenToPlayers()),
-    fetchPlayers: () => dispatch(fetchPlayers()),
-    registerForPlayerAdded: () => dispatch(registerForPlayerAdded()),
-    registerForPlayersChange: () => dispatch(registerForPlayersChange()),
-    registerForPlayerRemoved: () => dispatch(registerForPlayerRemoved())
+    listenToGuests: () => dispatch(listenToGuests()),
+
 });
 
 
 class App extends React.Component {
     componentDidMount() {
         this.props.listenToPlayers()
+        this.props.listenToGuests()
         // this.props.fetchPlayers();
         // this.props.registerForPlayerAdded();
         // this.props.registerForPlayersChange();
