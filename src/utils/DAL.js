@@ -11,11 +11,33 @@ export const setIn = (path, data) => new Promise((resolve, reject) => {
         .catch(reject);
 });
 
+export const remove = (path) => new Promise((resolve, reject) => {
+    firebase.database().ref(path).remove()
+        .then(resolve)
+        .catch(reject);
+});
+
 export const read = path => new Promise((resolve, reject) => {
     firebase.database().ref(path).once('value')
         .then(snapshot => resolve(snapshot.val()))
         .catch(reject);
 });
+
+// export const onValue = path => new Promise((resolve, reject) => {
+//     firebase.database().ref(path).on('value')
+//         .then(snapshot => resolve(snapshot.val()))
+//         .catch(reject);
+// });
+
+export const onValue = (path, callback) => {
+    const onValueCallback = (snapshot) => {
+        callback(snapshot);
+    };
+
+    firebase.database().ref(path).on('value', onValueCallback);
+
+    return getOffFunc(path, 'value', onValueCallback);
+};
 
 const getOffFunc = (path, eventType, callback) => {
     return () => {

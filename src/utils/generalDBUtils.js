@@ -8,6 +8,11 @@ export const fetchData  = (path, action) => (dispatch, getState) =>
             dispatch(action(data))
         ]));
 
+export const onValue  = (path, action) => (dispatch, getState) =>
+    DAL.onValue(path, (snapshot) => {
+        dispatch(action(snapshot.val()));
+    });
+
 export const registerToChildChanged  = (path, action) => (dispatch, getState) =>
     DAL.onChildChanged(path, (itemChangedSnapshot) => {
         dispatch(action(itemChangedSnapshot.key, itemChangedSnapshot.val()));

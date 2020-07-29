@@ -3,9 +3,10 @@
 import React from 'react';
 import Players from './Players.jsx'
 import { connect } from 'react-redux';
-import {fetchPlayers, registerForPlayersChange, registerForPlayerAdded, registerForPlayerRemoved} from '../redux/actions/playersAsyncActions'
+import {fetchPlayers, registerForPlayersChange, registerForPlayerAdded, registerForPlayerRemoved, listenToPlayers} from '../redux/actions/playersAsyncActions'
 
 const mapDispatchToProps = (dispatch) => ({
+    listenToPlayers: () => dispatch(listenToPlayers()),
     fetchPlayers: () => dispatch(fetchPlayers()),
     registerForPlayerAdded: () => dispatch(registerForPlayerAdded()),
     registerForPlayersChange: () => dispatch(registerForPlayersChange()),
@@ -15,10 +16,11 @@ const mapDispatchToProps = (dispatch) => ({
 
 class App extends React.Component {
     componentDidMount() {
-        this.props.fetchPlayers();
-        this.props.registerForPlayerAdded();
-        this.props.registerForPlayersChange();
-        this.props.registerForPlayerAdded();
+        this.props.listenToPlayers()
+        // this.props.fetchPlayers();
+        // this.props.registerForPlayerAdded();
+        // this.props.registerForPlayersChange();
+        // this.props.registerForPlayerAdded();
     }
 
     render() {

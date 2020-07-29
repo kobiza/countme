@@ -22,5 +22,17 @@ export const addPlayer = (playerData) => {
     return DAL.setIn('/players/' + playerId, newPlayer);
 };
 
+// export const removePlayer = (playerId) => {
+//     return DAL.remove('/players/' + playerId);
+// };
+
+export const removePlayer = (playerId) => {
+    return DAL.setIn('/players/' + playerId, null);
+};
+
+export const removeAllPlayers = () => {
+    return DAL.remove('/players/');
+};
+
 
 

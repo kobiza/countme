@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {addPlayer} from '../utils/playersDBUtils.js'
+import {addPlayer, removePlayer} from '../utils/playersDBUtils.js'
 
 function mapStateToProps(state) {
     return {
@@ -26,11 +26,17 @@ class Players extends React.Component {
             this.setState({playerName: event.target.value});
         };
 
+        this.removePlayer = (playerKey) => {
+            removePlayer(playerKey)
+        }
     }
 
     render() {
         const players = _.values(_.mapValues(this.props.players, (player, playerKey) => (
-            <li key={playerKey}>{player.name}</li>
+            <li key={playerKey}>
+                <span>{player.name}</span>
+                <button onClick={() => this.removePlayer(playerKey)}>X</button>
+            </li>
         )))
 
         return (
