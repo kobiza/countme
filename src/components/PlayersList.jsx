@@ -10,7 +10,7 @@ const PlayersList = memo(props => {
         <>
             {items.length > 0 && (
                 <Paper style={{ margin: 16 }}>
-                    <List style={{ overflow: "scroll" }}>
+                    <List>
                         {items.map((player, idx) => (
                             <PlayerListItem
                                 {...player}

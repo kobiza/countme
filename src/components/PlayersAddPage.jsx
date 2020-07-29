@@ -4,6 +4,7 @@ import {addPlayer, removePlayer} from '../utils/playersDBUtils.js'
 import Layout from './Layout.jsx'
 import AddPlayer from './AddPlayer.jsx'
 import PlayersList from './PlayersList.jsx'
+import {pushPlayer} from "../utils/playersDBUtils";
 
 function mapStateToProps(state) {
     return {
@@ -21,7 +22,7 @@ class PlayersAddPage extends React.Component {
         };
 
         this.addPlayer = () => {
-            addPlayer({name: this.state.playerName});
+            pushPlayer({name: this.state.playerName});
             this.setState({playerName: ''});
         };
 
