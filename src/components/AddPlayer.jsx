@@ -4,9 +4,9 @@ import { TextField, Paper, Button, Grid } from "@material-ui/core";
 const AddPlayer = memo(props => (
     <Paper style={{ margin: 16, padding: 16 }}>
         <Grid container>
-            <Grid xs={10} md={11} item style={{ paddingRight: 16 }}>
+            <Grid xs={10} md={11} item style={{ paddingLeft: 16 }}>
                 <TextField
-                    placeholder="Add Todo here"
+                    placeholder="שם השחקן"
                     value={props.inputValue}
                     onChange={props.onInputChange}
                     onKeyPress={props.onInputKeyPress}
@@ -20,7 +20,7 @@ const AddPlayer = memo(props => (
                     variant="outlined"
                     onClick={props.onButtonClick}
                 >
-                    Add
+                    הוסף
                 </Button>
             </Grid>
         </Grid>

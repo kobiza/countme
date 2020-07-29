@@ -3,6 +3,8 @@
 import React from 'react';
 import Players from './PlayersAddPage.jsx'
 import { connect } from 'react-redux';
+import RTL from './hoc/RTL.jsx';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import {fetchPlayers, registerForPlayersChange, registerForPlayerAdded, registerForPlayerRemoved, listenToPlayers} from '../redux/actions/playersAsyncActions'
 
 const mapDispatchToProps = (dispatch) => ({
@@ -24,9 +26,16 @@ class App extends React.Component {
     }
 
     render() {
+        const theme = createMuiTheme({
+            direction: 'rtl',
+        });
         return (
             <div className="index">
-                <Players/>
+                <ThemeProvider theme={theme}>
+                    <RTL>
+                        <Players/>
+                    </RTL>
+                </ThemeProvider>
             </div>
         );
     }

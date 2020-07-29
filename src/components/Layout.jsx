@@ -8,7 +8,7 @@ const Layout = memo(props => (
     >
         <AppBar color="primary" position="static" style={{ height: 64 }}>
             <Toolbar style={{ height: 64 }}>
-                <Typography color="inherit">TODO APP</Typography>
+                <Typography color="inherit">כדורגל חולון רביעי</Typography>
             </Toolbar>
         </AppBar>
         {props.children}

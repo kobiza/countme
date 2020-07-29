@@ -834,7 +834,7 @@
     "@babel/plugin-transform-react-jsx-source" "^7.10.4"
     "@babel/plugin-transform-react-pure-annotations" "^7.10.4"
 
-"@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
   version "7.10.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.5.tgz#303d8bd440ecd5a491eae6117fd3367698674c5c"
   integrity sha512-otddXKhdNn7d0ptoFRHtMLa8LqDxLYwTjB4nYgM1yy5N6gU/MUf8zqyyLltCH3yAVitBzmwK4us+DD0l/MauAg==
@@ -3580,6 +3580,13 @@ jss-plugin-vendor-prefixer@^10.0.3:
     css-vendor "^2.0.8"
     jss "^10.3.0"
 
+jss-rtl@^0.3.0:
+  version "0.3.0"
+  resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/jss-rtl/-/jss-rtl-0.3.0.tgz#386961615956f9655bd5e9ec7e9d08bef223e4af"
+  integrity sha1-OGlhYVlW+WVb1ensfp0IvvIj5K8=
+  dependencies:
+    rtl-css-js "^1.13.1"
+
 jss@^10.0.3, jss@^10.3.0:
   version "10.3.0"
   resolved "https://registry.yarnpkg.com/jss/-/jss-10.3.0.tgz#2cf7be265f72b59c1764d816fdabff1c5dd18326"
@@ -4681,6 +4688,13 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
   dependencies:
     hash-base "^3.0.0"
     inherits "^2.0.1"
+
+rtl-css-js@^1.13.1:
+  version "1.14.0"
+  resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/rtl-css-js/-/rtl-css-js-1.14.0.tgz#daa4f192a92509e292a0519f4b255e6e3c076b7d"
+  integrity sha1-2qTxkqklCeKSoFGfSyVebjwHa30=
+  dependencies:
+    "@babel/runtime" "^7.1.2"
 
 run-queue@^1.0.0, run-queue@^1.0.3:
   version "1.0.3"
