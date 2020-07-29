@@ -22,6 +22,16 @@ export const addPlayer = (playerData) => {
     return DAL.setIn('/players/' + playerId, newPlayer);
 };
 
+export const pushPlayer = (playerData) => {
+    const defaults = {
+        payed: 0,
+        arrived: false
+    };
+    const newPlayer = _.defaults(playerData, defaults);
+
+    return DAL.push('/players/', newPlayer);
+};
+
 // export const removePlayer = (playerId) => {
 //     return DAL.remove('/players/' + playerId);
 // };

@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import Players from './Players.jsx'
+import Players from './PlayersAddPage.jsx'
 import { connect } from 'react-redux';
 import {fetchPlayers, registerForPlayersChange, registerForPlayerAdded, registerForPlayerRemoved, listenToPlayers} from '../redux/actions/playersAsyncActions'
 

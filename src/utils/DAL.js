@@ -11,6 +11,12 @@ export const setIn = (path, data) => new Promise((resolve, reject) => {
         .catch(reject);
 });
 
+export const push = (path, data) => new Promise((resolve, reject) => {
+    firebase.database().ref(path).push().set(data)
+        .then(resolve)
+        .catch(reject);
+});
+
 export const remove = (path) => new Promise((resolve, reject) => {
     firebase.database().ref(path).remove()
         .then(resolve)
