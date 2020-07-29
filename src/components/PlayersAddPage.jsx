@@ -4,6 +4,7 @@ import {pushPlayer, pushGuest, removePlayer, removeGuest} from '../utils/players
 import Layout from './Layout.jsx'
 import AddPlayer from './AddPlayer.jsx'
 import PlayersList from './PlayersList.jsx'
+import {Button} from "@material-ui/core";
 
 const forPlayWithGuests = (name, numberOfGuests) => {
     const guests = []
@@ -28,6 +29,16 @@ const getPlayersToAdd = (playerNameText) => {
     const [name, numberOfGuests] = parts.map(t => t.trim())
 
     return forPlayWithGuests(name, numberOfGuests)
+}
+
+const getPlayersToPlay = (players, guests) => {
+    const maxPlayers = 15
+    if (players.length >= maxPlayers) {
+        return [players.slice(0, maxPlayers), []]
+    } else {
+        const missPlayers = maxPlayers - players.length
+        return [players, guests.slice(0, missPlayers)]
+    }
 }
 
 function mapStateToProps(state) {
@@ -82,6 +93,16 @@ class PlayersAddPage extends React.Component {
 
             return false;
         }
+
+        this.copyPlayerList = () => {
+            const players = _.toArray(this.props.players)
+            const guests = _.toArray(this.props.guests)
+
+            const [playersToPlay, guestsToPlay] = getPlayersToPlay(players, guests)
+
+            console.log('קבועים:', playersToPlay.map(p => p.name).join(', '))
+            console.log('אורחים:', guestsToPlay.map(p => p.name).join(', '))
+        }
     }
 
     render() {
@@ -104,6 +125,14 @@ class PlayersAddPage extends React.Component {
                     onItemCheck={idx => this.checkGuest(idx)}
                     onItemRemove={idx => this.removeGuest(idx)}
                 />
+
+                <Button
+                    fullWidth
+                    color="secondary"
+                    onClick={this.copyPlayerList}
+                >
+                    העתק
+                </Button>
             </Layout>
         )
     }
