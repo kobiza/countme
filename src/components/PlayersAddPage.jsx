@@ -5,21 +5,29 @@ import Layout from './Layout.jsx'
 import AddPlayer from './AddPlayer.jsx'
 import PlayersList from './PlayersList.jsx'
 
+const forPlayWithGuests = (name, numberOfGuests) => {
+    const guests = []
+    for (let i = 0 ; i < numberOfGuests; i++) {
+        guests.push(`חבר של ${name} - ${i + 1}`)
+    }
+
+    return [[name], guests]
+}
+
 const getPlayersToAdd = (playerNameText) => {
-    const parts = playerNameText.trim().split('+')
+    const cleanName = playerNameText.trim()
+    if (cleanName.startsWith('חבר של')) {
+        return [[], [cleanName]]
+    }
+
+    const parts = cleanName.split('+')
     if (parts.length === 1) {
         return [[parts[0]], []]
     }
 
     const [name, numberOfGuests] = parts.map(t => t.trim())
 
-    const guests = []
-    for (let i = 0 ; i < numberOfGuests; i++) {
-        guests.push(`חבר של ${name} - ${i + 1}`)
-    }
-
-    console.log('[[name], [guests]]', [[name], [guests]])
-    return [[name], guests]
+    return forPlayWithGuests(name, numberOfGuests)
 }
 
 function mapStateToProps(state) {
