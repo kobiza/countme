@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {pushPlayer, pushGuest, removePlayer, removeGuest} from '../utils/playersDBUtils.js'
+import {pushPlayer, pushGuest, removePlayer, removeGuest, removeAllPlayers, removeAllGuests} from '../utils/playersDBUtils.js'
 import Layout from './Layout.jsx'
 import AddPlayer from './AddPlayer.jsx'
 import PlayersList from './PlayersList.jsx'
 import {Button} from "@material-ui/core";
+import Fab from '@material-ui/core/Fab';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
-const forPlayWithGuests = (name, numberOfGuests) => {
+const getPlayerWithGuests = (name, numberOfGuests) => {
     const guests = []
     for (let i = 0 ; i < numberOfGuests; i++) {
         guests.push(`חבר של ${name} - ${i + 1}`)
@@ -17,7 +19,7 @@ const forPlayWithGuests = (name, numberOfGuests) => {
 
 const getPlayersToAdd = (playerNameText) => {
     const cleanName = playerNameText.trim()
-    if (cleanName.startsWith('חבר של')) {
+    if (cleanName.startsWith('חבר של') || cleanName.startsWith('מאוחר:')) {
         return [[], [cleanName]]
     }
 
@@ -28,16 +30,19 @@ const getPlayersToAdd = (playerNameText) => {
 
     const [name, numberOfGuests] = parts.map(t => t.trim())
 
-    return forPlayWithGuests(name, numberOfGuests)
+    return getPlayerWithGuests(name, numberOfGuests)
 }
 
 const getPlayersToPlay = (players, guests) => {
+    const playersArr = _.toArray(_.mapValues(players, (item, id) => ({...item, id})))
+    const guestsArr = _.toArray(_.mapValues(guests, (item, id) => ({...item, id})))
+
     const maxPlayers = 15
-    if (players.length >= maxPlayers) {
-        return [players.slice(0, maxPlayers), []]
+    if (playersArr.length >= maxPlayers) {
+        return [playersArr.slice(0, maxPlayers), [], playersArr.slice(maxPlayers - 1).concat(guestsArr)]
     } else {
-        const missPlayers = maxPlayers - players.length
-        return [players, guests.slice(0, missPlayers)]
+        const missPlayers = maxPlayers - playersArr.length
+        return [playersArr, guestsArr.slice(0, missPlayers), guestsArr.slice(missPlayers)]
     }
 }
 
@@ -94,18 +99,37 @@ class PlayersAddPage extends React.Component {
             return false;
         }
 
-        this.copyPlayerList = () => {
-            const players = _.toArray(this.props.players)
-            const guests = _.toArray(this.props.guests)
+        this.cleanLists = () => {
+            removeAllPlayers()
+            removeAllGuests()
+        }
 
-            const [playersToPlay, guestsToPlay] = getPlayersToPlay(players, guests)
-
-            console.log('קבועים:', playersToPlay.map(p => p.name).join(', '))
-            console.log('אורחים:', guestsToPlay.map(p => p.name).join(', '))
+        this.copyToClipboard = (e) => {
+            this.textArea.select();
+            document.execCommand('copy');
         }
     }
 
     render() {
+        const [playersToPlay, guestsToPlay, onHold] = getPlayersToPlay(this.props.players, this.props.guests)
+        const playingPlayers = playersToPlay.concat(guestsToPlay)
+        const message = [
+            `מגיעים (${playingPlayers.length}):`,
+            playingPlayers.map(p => p.name).join(', '),
+            `ממתינים (${onHold.length}):`,
+            onHold.map(p => p.name).join(', ')
+        ].join('\n')
+        const playingPlayersIds = _.reduce(playersToPlay, (acc, {id}) => {
+            acc[id] = true
+
+            return acc
+        }, {})
+        const playingGuestsIds = _.reduce(guestsToPlay, (acc, {id}) => {
+            acc[id] = true
+
+            return acc
+        }, {})
+
         return (
             <Layout>
                 <AddPlayer
@@ -116,12 +140,14 @@ class PlayersAddPage extends React.Component {
                 />
                 <PlayersList
                     items={this.props.players}
+                    playingIds={playingPlayersIds}
                     onItemCheck={idx => this.checkPlayer(idx)}
                     onItemRemove={idx => this.removePlayer(idx)}
                 />
 
                 <PlayersList
                     items={this.props.guests}
+                    playingIds={playingGuestsIds}
                     onItemCheck={idx => this.checkGuest(idx)}
                     onItemRemove={idx => this.removeGuest(idx)}
                 />
@@ -129,10 +155,25 @@ class PlayersAddPage extends React.Component {
                 <Button
                     fullWidth
                     color="secondary"
-                    onClick={this.copyPlayerList}
+                    onClick={() => this.cleanLists()}
                 >
-                    העתק
+                    נקה
                 </Button>
+
+                <textarea
+                    ref={(textarea) => this.textArea = textarea}
+                    style={{position: 'fixed', top: '-1000px'}}
+                    value={message}
+                />
+
+                <Fab
+                    color="secondary"
+                    aria-label="save"
+                    style={{position: 'fixed', bottom: '20px', left: '20px'}}
+                    onClick={this.copyToClipboard}
+                >
+                    <LibraryBooksIcon/>
+                </Fab>
             </Layout>
         )
     }

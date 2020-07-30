@@ -29,6 +29,7 @@ export const pushGuest = _pushPlayer('guests')
 export const removeGuest = _removePlayer('guests')
 
 export const removeAllPlayers = _removeAllPlayers('players')
+export const removeAllGuests = _removeAllPlayers('guests')
 
 
 

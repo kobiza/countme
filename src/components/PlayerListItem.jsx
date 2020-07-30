@@ -11,7 +11,7 @@ import {
 import DeleteOutlined from "@material-ui/icons/DeleteOutlined";
 
 const PlayerListItem = memo(props => (
-    <ListItem divider={props.divider}>
+    <ListItem divider={props.divider} selected={props.isPlaying}>
         <Checkbox
             onClick={props.onCheckBoxToggle}
             checked={props.checked}

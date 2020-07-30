@@ -15,6 +15,7 @@ const PlayersList = memo(props => {
                             <PlayerListItem
                                 {...player}
                                 key={`player.${player.id}`}
+                                isPlaying={props.playingIds[player.id]}
                                 divider={idx !== items.length - 1}
                                 onButtonClick={() => props.onItemRemove(player.id)}
                                 onCheckBoxToggle={() => props.onItemCheck(player.id)}
