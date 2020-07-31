@@ -104,21 +104,29 @@ class PlayersAddPage extends React.Component {
             removeAllGuests()
         }
 
-        this.copyToClipboard = (e) => {
-            this.textArea.select();
-            document.execCommand('copy');
+        this.copyToClipboard = (playingPlayers, onHold) => {
+            const message = [
+                `מגיעים (${playingPlayers.length}):`,
+                playingPlayers.map(p => p.name).join(', '),
+                `ממתינים (${onHold.length}):`,
+                onHold.map(p => p.name).join(', ')
+            ].join('\n')
+            navigator.clipboard.writeText(message)
+                .then(() => {
+                    console.log('Text copied to clipboard');
+                })
+                .catch(err => {
+                    // This can happen if the user denies clipboard permissions:
+                    console.error('Could not copy text: ', err);
+                });
+
         }
     }
 
     render() {
         const [playersToPlay, guestsToPlay, onHold] = getPlayersToPlay(this.props.players, this.props.guests)
         const playingPlayers = playersToPlay.concat(guestsToPlay)
-        const message = [
-            `מגיעים (${playingPlayers.length}):`,
-            playingPlayers.map(p => p.name).join(', '),
-            `ממתינים (${onHold.length}):`,
-            onHold.map(p => p.name).join(', ')
-        ].join('\n')
+
         const playingPlayersIds = _.reduce(playersToPlay, (acc, {id}) => {
             acc[id] = true
 
@@ -141,14 +149,12 @@ class PlayersAddPage extends React.Component {
                 <PlayersList
                     items={this.props.players}
                     playingIds={playingPlayersIds}
-                    onItemCheck={idx => this.checkPlayer(idx)}
                     onItemRemove={idx => this.removePlayer(idx)}
                 />
 
                 <PlayersList
                     items={this.props.guests}
                     playingIds={playingGuestsIds}
-                    onItemCheck={idx => this.checkGuest(idx)}
                     onItemRemove={idx => this.removeGuest(idx)}
                 />
 
@@ -160,17 +166,11 @@ class PlayersAddPage extends React.Component {
                     נקה
                 </Button>
 
-                <textarea
-                    ref={(textarea) => this.textArea = textarea}
-                    style={{position: 'fixed', top: '-1000px'}}
-                    value={message}
-                />
-
                 <Fab
                     color="secondary"
                     aria-label="save"
                     style={{position: 'fixed', bottom: '20px', left: '20px'}}
-                    onClick={this.copyToClipboard}
+                    onClick={() => this.copyToClipboard(playingPlayers, onHold)}
                 >
                     <LibraryBooksIcon/>
                 </Fab>
