@@ -193,7 +193,7 @@ class PlayersAddPage extends React.Component {
                 </Fab>
                 <Snackbar open={this.state.copiedAlertOpen} autoHideDuration={6000} onClose={this.handleCloseAlert}>
                     <Alert onClose={this.handleCloseAlert} severity="info">
-                        The message has been copied
+                        ההודעה הועתקה
                     </Alert>
                 </Snackbar>
             </Layout>
