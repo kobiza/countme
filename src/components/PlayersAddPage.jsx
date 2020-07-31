@@ -5,8 +5,16 @@ import Layout from './Layout.jsx'
 import AddPlayer from './AddPlayer.jsx'
 import PlayersList from './PlayersList.jsx'
 import {Button} from "@material-ui/core";
+import Snackbar from '@material-ui/core/Snackbar';
 import Fab from '@material-ui/core/Fab';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 
 const getPlayerWithGuests = (name, numberOfGuests) => {
     const guests = []
@@ -59,7 +67,8 @@ class PlayersAddPage extends React.Component {
         super(props);
 
         this.state = {
-            playerName: ''
+            playerName: '',
+            copiedAlertOpen: false
         };
 
         this.addPlayer = () => {
@@ -113,7 +122,7 @@ class PlayersAddPage extends React.Component {
             ].join('\n')
             navigator.clipboard.writeText(message)
                 .then(() => {
-                    console.log('Text copied to clipboard');
+                    this.setState({copiedAlertOpen: true})
                 })
                 .catch(err => {
                     // This can happen if the user denies clipboard permissions:
@@ -121,6 +130,14 @@ class PlayersAddPage extends React.Component {
                 });
 
         }
+
+        this.handleCloseAlert = (event, reason) => {
+            if (reason === 'clickaway') {
+                return;
+            }
+
+            this.setState({copiedAlertOpen: false})
+        };
     }
 
     render() {
@@ -174,6 +191,11 @@ class PlayersAddPage extends React.Component {
                 >
                     <LibraryBooksIcon/>
                 </Fab>
+                <Snackbar open={this.state.copiedAlertOpen} autoHideDuration={6000} onClose={this.handleCloseAlert}>
+                    <Alert onClose={this.handleCloseAlert} severity="info">
+                        The message has been copied
+                    </Alert>
+                </Snackbar>
             </Layout>
         )
     }
