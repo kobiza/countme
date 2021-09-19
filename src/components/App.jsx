@@ -19,7 +19,7 @@ function App () {
     });
 
     return (
-        <div className="index">
+        <div className="index" dir="rtl">
             <ThemeProvider theme={theme}>
                 <RTL>
                     <Players/>
