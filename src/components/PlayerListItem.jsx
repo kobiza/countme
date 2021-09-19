@@ -1,9 +1,7 @@
 import React, { memo } from "react";
 
 import {
-    List,
     ListItem,
-    Checkbox,
     IconButton,
     ListItemText,
     ListItemSecondaryAction

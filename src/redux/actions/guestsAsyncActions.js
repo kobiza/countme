@@ -2,10 +2,6 @@
 
 import {
     onValue,
-    fetchData,
-    registerToChildAdded,
-    registerToChildChanged,
-    registerToChildRemoved
 } from "../../utils/generalDBUtils";
 import * as actionTypes from "./actionTypes";
 

@@ -19,10 +19,6 @@ class App extends React.Component {
     componentDidMount() {
         this.props.listenToPlayers()
         this.props.listenToGuests()
-        // this.props.fetchPlayers();
-        // this.props.registerForPlayerAdded();
-        // this.props.registerForPlayersChange();
-        // this.props.registerForPlayerAdded();
     }
 
     render() {

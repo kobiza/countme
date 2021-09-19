@@ -19,15 +19,10 @@ const _removeAllPlayers = (listName) => () => {
     return DAL.remove(`/${listName}/`);
 };
 
-
 export const pushPlayer = _pushPlayer('players')
-
 export const removePlayer = _removePlayer('players')
-
 export const pushGuest = _pushPlayer('guests')
-
 export const removeGuest = _removePlayer('guests')
-
 export const removeAllPlayers = _removeAllPlayers('players')
 export const removeAllGuests = _removeAllPlayers('guests')
 

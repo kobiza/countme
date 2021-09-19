@@ -4,29 +4,19 @@ export const initDB = config => {
     firebase.initializeApp(config);
 };
 
-export const setIn = (path, data) => new Promise((resolve, reject) => {
-    firebase.database().ref(path).set(data)
-        .then(resolve)
-        .catch(reject);
-});
+export const setIn = (path, data) => firebase.database().ref(path).set(data)
 
-export const push = (path, data) => new Promise((resolve, reject) => {
-    firebase.database().ref(path).push().set(data)
-        .then(resolve)
-        .catch(reject);
-});
+export const push = (path, data) => firebase.database().ref(path).push().set(data)
 
-export const remove = (path) => new Promise((resolve, reject) => {
-    firebase.database().ref(path).remove()
-        .then(resolve)
-        .catch(reject);
-});
+export const remove = (path) => firebase.database().ref(path).remove()
 
-export const read = path => new Promise((resolve, reject) => {
-    firebase.database().ref(path).once('value')
-        .then(snapshot => resolve(snapshot.val()))
-        .catch(reject);
-});
+export const read = path => firebase.database().ref(path).once('value').then(snapshot => snapshot.val())
+
+const getOffFunc = (path, eventType, callback) => {
+    return () => {
+        firebase.database().ref(path).off(eventType, callback);
+    };
+};
 
 export const onValue = (path, callback) => {
     const onValueCallback = (snapshot) => {
@@ -36,12 +26,6 @@ export const onValue = (path, callback) => {
     firebase.database().ref(path).on('value', onValueCallback);
 
     return getOffFunc(path, 'value', onValueCallback);
-};
-
-const getOffFunc = (path, eventType, callback) => {
-    return () => {
-        firebase.database().ref(path).off(eventType, callback);
-    };
 };
 
 export const onChildChanged = (path, callback) => {
@@ -73,5 +57,3 @@ export const onChildRemoved = (path, callback) => {
 
     return getOffFunc(path, 'child_removed', onChildRemovedCallback);
 };
-
-//add offChildChanged
