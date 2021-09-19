@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import * as DAL from './DAL.js';
-import { Promise } from 'bluebird';
 import {addCreditPointsToPlayer} from './playersDBUtils';
 
 const s4 = () => {

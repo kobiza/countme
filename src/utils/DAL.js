@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import { Promise } from 'bluebird';
 
 export const initDB = config => {
     firebase.initializeApp(config);
@@ -28,12 +27,6 @@ export const read = path => new Promise((resolve, reject) => {
         .then(snapshot => resolve(snapshot.val()))
         .catch(reject);
 });
-
-// export const onValue = path => new Promise((resolve, reject) => {
-//     firebase.database().ref(path).on('value')
-//         .then(snapshot => resolve(snapshot.val()))
-//         .catch(reject);
-// });
 
 export const onValue = (path, callback) => {
     const onValueCallback = (snapshot) => {
