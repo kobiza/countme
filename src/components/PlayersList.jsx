@@ -1,9 +1,9 @@
-import React, { memo } from "react";
+import React  from "react";
 import { List, Paper } from "@material-ui/core";
 
 import PlayerListItem from "./PlayerListItem.jsx";
 
-const PlayersList = memo(props => {
+function PlayersList (props) {
     const itemsArr = _.mapValues(props.items, (item, id) => ({...item, id}))
     const items = _.toArray(itemsArr)
     return (
@@ -26,6 +26,8 @@ const PlayersList = memo(props => {
             )}
         </>
     )
-});
+}
+
+
 
 export default PlayersList;

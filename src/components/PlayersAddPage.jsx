@@ -1,5 +1,6 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, {useState} from 'react';
+import _ from 'lodash'
+import { useSelector } from 'react-redux'
 import {pushPlayer, pushGuest, removePlayer, removeGuest, removeAllPlayers, removeAllGuests} from '../utils/playersDBUtils.js'
 import Layout from './Layout.jsx'
 import AddPlayer from './AddPlayer.jsx'
@@ -54,152 +55,123 @@ const getPlayersToPlay = (players, guests) => {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        players: state.players,
-        guests: state.guests
+function PlayersAddPage () {
+    const [playerName, setPlayerName] = useState('')
+    const [copiedAlertOpen, setCopiedAlertOpen] = useState(false)
+
+    const players = useSelector((state) => state.players)
+    const guests = useSelector((state) => state.guests)
+
+    const updatePlayerName = (event) => {
+        setPlayerName(event.target.value);
     };
-}
 
-class PlayersAddPage extends React.Component {
+    const addPlayer = () => {
+        const [players, guests] = getPlayersToAdd(playerName)
+        _.forEach(players, playerName => pushPlayer({name: playerName}))
+        _.forEach(guests, guestName => pushGuest({name: guestName}))
 
-    constructor(props) {
-        super(props);
+        setPlayerName('')
+    };
 
-        this.state = {
-            playerName: '',
-            copiedAlertOpen: false
-        };
-
-        this.addPlayer = () => {
-            const [players, guests] = getPlayersToAdd(this.state.playerName)
-            _.forEach(players, playerName => pushPlayer({name: playerName}))
-            _.forEach(guests, guestName => pushGuest({name: guestName}))
-
-            this.setState({playerName: ''});
-        };
-
-        this.updatePlayerName = (event) => {
-            this.setState({playerName: event.target.value});
-        };
-
-        this.removePlayer = (playerKey) => {
-            removePlayer(playerKey)
+    const addPlayerOnEnter = (event) => {
+        if (event.which === 13 || event.keyCode === 13) {
+            addPlayer()
+            return true;
         }
 
-        this.checkPlayer = (playerKey) => {
-            removePlayer(playerKey)
-        }
-
-        this.removeGuest = (playerKey) => {
-            removeGuest(playerKey)
-        }
-
-        this.checkGuest = (playerKey) => {
-            removeGuest(playerKey)
-        }
-
-        this.addPlayerOnEnter = (event) => {
-            if (event.which === 13 || event.keyCode === 13) {
-                this.addPlayer()
-                return true;
-            }
-
-            return false;
-        }
-
-        this.cleanLists = () => {
-            removeAllPlayers()
-            removeAllGuests()
-        }
-
-        this.copyToClipboard = (playingPlayers, onHold) => {
-            const message = [
-                `מגיעים (${playingPlayers.length}):`,
-                playingPlayers.map(p => p.name).join(', '),
-                `ממתינים (${onHold.length}):`,
-                onHold.map(p => p.name).join(', ')
-            ].join('\n')
-            navigator.clipboard.writeText(message)
-                .then(() => {
-                    this.setState({copiedAlertOpen: true})
-                })
-                .catch(err => {
-                    // This can happen if the user denies clipboard permissions:
-                    console.error('Could not copy text: ', err);
-                });
-
-        }
-
-        this.handleCloseAlert = (event, reason) => {
-            if (reason === 'clickaway') {
-                return;
-            }
-
-            this.setState({copiedAlertOpen: false})
-        };
+        return false;
     }
 
-    render() {
-        const [playersToPlay, guestsToPlay, onHold] = getPlayersToPlay(this.props.players, this.props.guests)
-        const playingPlayers = playersToPlay.concat(guestsToPlay)
+    const [playersToPlay, guestsToPlay, onHold] = getPlayersToPlay(players, guests)
+    const playingPlayers = playersToPlay.concat(guestsToPlay)
 
-        const playingPlayersIds = _.reduce(playersToPlay, (acc, {id}) => {
-            acc[id] = true
+    const playingPlayersIds = _.reduce(playersToPlay, (acc, {id}) => {
+        acc[id] = true
 
-            return acc
-        }, {})
-        const playingGuestsIds = _.reduce(guestsToPlay, (acc, {id}) => {
-            acc[id] = true
+        return acc
+    }, {})
+    const playingGuestsIds = _.reduce(guestsToPlay, (acc, {id}) => {
+        acc[id] = true
 
-            return acc
-        }, {})
+        return acc
+    }, {})
 
-        return (
-            <Layout>
-                <AddPlayer
-                    inputValue={this.state.playerName}
-                    onInputChange={this.updatePlayerName}
-                    onButtonClick={this.addPlayer}
-                    onInputKeyPress={event => this.addPlayerOnEnter(event)}
-                />
-                <PlayersList
-                    items={this.props.players}
-                    playingIds={playingPlayersIds}
-                    onItemRemove={idx => this.removePlayer(idx)}
-                />
-
-                <PlayersList
-                    items={this.props.guests}
-                    playingIds={playingGuestsIds}
-                    onItemRemove={idx => this.removeGuest(idx)}
-                />
-
-                <Button
-                    fullWidth
-                    color="secondary"
-                    onClick={() => this.cleanLists()}
-                >
-                    נקה
-                </Button>
-
-                <Fab
-                    color="secondary"
-                    aria-label="save"
-                    style={{position: 'fixed', bottom: '20px', left: '20px'}}
-                    onClick={() => this.copyToClipboard(playingPlayers, onHold)}
-                >
-                    <LibraryBooksIcon/>
-                </Fab>
-                <Snackbar open={this.state.copiedAlertOpen} autoHideDuration={6000} onClose={this.handleCloseAlert}>
-                    <Alert onClose={this.handleCloseAlert} severity="info">
-                        ההודעה הועתקה
-                    </Alert>
-                </Snackbar>
-            </Layout>
-        )
+    const cleanLists = () => {
+        removeAllPlayers()
+        removeAllGuests()
     }
+
+    const copyToClipboard = (playingPlayers, onHold) => {
+        const message = [
+            `מגיעים (${playingPlayers.length}):`,
+            playingPlayers.map(p => p.name).join(', '),
+            `ממתינים (${onHold.length}):`,
+            onHold.map(p => p.name).join(', ')
+        ].join('\n')
+        navigator.clipboard.writeText(message)
+            .then(() => {
+                setCopiedAlertOpen(true)
+            })
+            .catch(err => {
+                // This can happen if the user denies clipboard permissions:
+                console.error('Could not copy text: ', err);
+            });
+
+    }
+
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setCopiedAlertOpen(false)
+    };
+
+    return (
+        <Layout>
+            <AddPlayer
+                inputValue={playerName}
+                onInputChange={updatePlayerName}
+                onButtonClick={addPlayer}
+                onInputKeyPress={event => addPlayerOnEnter(event)}
+            />
+            <PlayersList
+                items={players}
+                playingIds={playingPlayersIds}
+                onItemRemove={idx => removePlayer(idx)}
+            />
+
+            <PlayersList
+                items={guests}
+                playingIds={playingGuestsIds}
+                onItemRemove={idx => removeGuest(idx)}
+            />
+
+            <Button
+                fullWidth
+                color="secondary"
+                onClick={() => cleanLists()}
+            >
+                נקה
+            </Button>
+
+            <Fab
+                color="secondary"
+                aria-label="save"
+                style={{position: 'fixed', bottom: '20px', left: '20px'}}
+                onClick={() => copyToClipboard(playingPlayers, onHold)}
+            >
+                <LibraryBooksIcon/>
+            </Fab>
+            <Snackbar open={copiedAlertOpen} autoHideDuration={6000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity="info">
+                    ההודעה הועתקה
+                </Alert>
+            </Snackbar>
+        </Layout>
+    )
 
 }
 
-export default connect(mapStateToProps)(PlayersAddPage);
+export default PlayersAddPage;
