@@ -1,7 +1,14 @@
-import React from 'react';
+import React, {KeyboardEventHandler, MouseEventHandler, ChangeEventHandler} from 'react';
 import { TextField, Paper, Button, Grid } from "@material-ui/core";
 
-function AddPlayer (props) {
+type Props = {
+    inputValue: string
+    onInputChange: ChangeEventHandler
+    onInputKeyPress: KeyboardEventHandler
+    onButtonClick: MouseEventHandler
+}
+
+const AddPlayer: React.FC<Props> = (props) => {
     return (
         <Paper style={{ margin: 16, padding: 16 }}>
             <Grid container>

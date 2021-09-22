@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as DAL from './DAL.js';
+import * as DAL from './DAL';
 
 const _pushPlayer = (listName) => (playerData) => {
     const defaults = {

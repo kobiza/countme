@@ -1,16 +1,17 @@
 import React, {useState} from 'react';
 import _ from 'lodash'
 import { useSelector } from 'react-redux'
-import {pushPlayer, pushGuest, removePlayer, removeGuest, removeAllPlayers, removeAllGuests} from '../utils/playersDBUtils.js'
-import Layout from './Layout.jsx'
-import AddPlayer from './AddPlayer.jsx'
-import PlayersList from './PlayersList.jsx'
+import {pushPlayer, pushGuest, removePlayer, removeGuest, removeAllPlayers, removeAllGuests} from '../utils/playersDBUtils'
+import Layout from './Layout'
+import AddPlayer from './AddPlayer'
+import PlayersList from './PlayersList'
 import {Button} from "@material-ui/core";
 import Snackbar from '@material-ui/core/Snackbar';
 import Fab from '@material-ui/core/Fab';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 import MuiAlert from '@material-ui/lab/Alert';
+import {Player} from "../types/Players";
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -18,7 +19,7 @@ function Alert(props) {
 
 
 const getPlayerWithGuests = (name, numberOfGuests) => {
-    const guests = []
+    const guests: Array<string> = []
     for (let i = 0 ; i < numberOfGuests; i++) {
         guests.push(`חבר של ${name} - ${i + 1}`)
     }
@@ -55,12 +56,17 @@ const getPlayersToPlay = (players, guests) => {
     }
 }
 
-function PlayersAddPage () {
-    const [playerName, setPlayerName] = useState('')
-    const [copiedAlertOpen, setCopiedAlertOpen] = useState(false)
+type StoreState = {
+    players: Record<string, Player>
+    guests: Record<string, Player>
+}
 
-    const players = useSelector((state) => state.players)
-    const guests = useSelector((state) => state.guests)
+const PlayersAddPage: React.FC = () => {
+    const [playerName, setPlayerName] = useState<string>('')
+    const [copiedAlertOpen, setCopiedAlertOpen] = useState<boolean>(false)
+
+    const players = useSelector<StoreState, StoreState['players']>((state) => state.players)
+    const guests = useSelector<StoreState, StoreState['guests']>((state) => state.guests)
 
     const updatePlayerName = (event) => {
         setPlayerName(event.target.value);

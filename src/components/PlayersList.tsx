@@ -1,9 +1,17 @@
 import React  from "react";
+import _ from 'lodash'
 import { List, Paper } from "@material-ui/core";
 
-import PlayerListItem from "./PlayerListItem.jsx";
+import PlayerListItem from "./PlayerListItem";
+import {Player} from "../types/Players";
 
-function PlayersList (props) {
+type Props = {
+    items: Record<string, Player>
+    playingIds: Record<string, true>
+    onItemRemove: (playerId: string) => void
+}
+
+const PlayersList: React.FC<Props> = (props) => {
     const itemsArr = _.mapValues(props.items, (item, id) => ({...item, id}))
     const items = _.toArray(itemsArr)
     return (
@@ -18,7 +26,6 @@ function PlayersList (props) {
                                 isPlaying={props.playingIds[player.id]}
                                 divider={idx !== items.length - 1}
                                 onButtonClick={() => props.onItemRemove(player.id)}
-                                onCheckBoxToggle={() => props.onItemCheck(player.id)}
                             />
                         ))}
                     </List>
@@ -27,7 +34,5 @@ function PlayersList (props) {
         </>
     )
 }
-
-
 
 export default PlayersList;

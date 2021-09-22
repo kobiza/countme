@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Paper } from "@material-ui/core";
 
-function Layout (props) {
+const Layout: React.FC = (props) => {
     return (
         <Paper
             elevation={0}

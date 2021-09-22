@@ -3,10 +3,9 @@ import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 
-// Configure JSS
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
-function RTL(props) {
+const RTL: React.FC = (props) => {
     return (
         <StylesProvider jss={jss}>
             {props.children}

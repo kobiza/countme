@@ -2,9 +2,9 @@
 
 import React from 'react';
 import {render} from 'react-dom';
-import {initDB} from './utils/DAL.js';
+import {initDB} from './utils/DAL';
 
-import AppWrapper from './components/AppWrapper.jsx';
+import AppWrapper from './components/AppWrapper';
 
 var fbConfig = {
     apiKey: "AIzaSyBbOSSGQNG_EArQ2Wqh7a3rQ2rTaLPy0e8",
