@@ -2,24 +2,9 @@
 
 import React from 'react';
 import {render} from 'react-dom';
-import {Provider} from 'react-redux';
 import {initDB} from './utils/DAL.js';
-import makeStore from './redux/makeStore';
 
-
-import App from './components/App.jsx';
-
-const store = makeStore();
-
-class AppWrapper extends React.Component {
-    render() {
-        return (
-            <Provider store={store}>
-                <App/>
-            </Provider>
-        );
-    }
-}
+import AppWrapper from './components/AppWrapper.jsx';
 
 var fbConfig = {
     apiKey: "AIzaSyBbOSSGQNG_EArQ2Wqh7a3rQ2rTaLPy0e8",
