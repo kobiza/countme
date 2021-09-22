@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ChangeEventHandler, KeyboardEventHandler, useState} from 'react';
 import _ from 'lodash'
 import {
     pushPlayer,
@@ -12,20 +12,22 @@ import {
 import Layout from './Layout'
 import AddPlayer from './AddPlayer'
 import PlayersList from './PlayersList'
-import {Button} from "@material-ui/core";
+import {Button, SnackbarProps} from "@material-ui/core";
 import Snackbar from '@material-ui/core/Snackbar';
 import Fab from '@material-ui/core/Fab';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
-import MuiAlert from '@material-ui/lab/Alert';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { useAppSelector } from './hooks/reduxHooks';
+import { RootState } from '../redux/store';
+import {Player} from "../types/Players";
 
-function Alert(props) {
+function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 
-const getPlayerWithGuests = (name, numberOfGuests) => {
+const getPlayerWithGuests = (name: string, numberOfGuests: number) => {
     const guests: Array<string> = []
     for (let i = 0 ; i < numberOfGuests; i++) {
         guests.push(`חבר של ${name} - ${i + 1}`)
@@ -34,7 +36,7 @@ const getPlayerWithGuests = (name, numberOfGuests) => {
     return [[name], guests]
 }
 
-const getPlayersToAdd = (playerNameText) => {
+const getPlayersToAdd = (playerNameText: string) => {
     const cleanName = playerNameText.trim()
     if (cleanName.startsWith('חבר של') || cleanName.startsWith('מאוחר:')) {
         return [[], [cleanName]]
@@ -45,12 +47,17 @@ const getPlayersToAdd = (playerNameText) => {
         return [[parts[0]], []]
     }
 
-    const [name, numberOfGuests] = parts.map(t => t.trim())
+    const [name, numberOfGuestsStr] = parts.map(t => t.trim())
+    const numberOfGuests = Number(numberOfGuestsStr) || 0
 
     return getPlayerWithGuests(name, numberOfGuests)
 }
 
-const getPlayersToPlay = (players, guests) => {
+type PlayerWithId = Player & {
+    id: string
+}
+
+const getPlayersToPlay = (players: RootState['players'], guests: RootState['guests']): [Array<PlayerWithId>, Array<PlayerWithId>, Array<PlayerWithId>] => {
     const playersArr = _.toArray(_.mapValues(players, (item, id) => ({...item, id})))
     const guestsArr = _.toArray(_.mapValues(guests, (item, id) => ({...item, id})))
 
@@ -70,7 +77,7 @@ const PlayersAddPage: React.FC = () => {
     const players = useAppSelector((state) => state.players)
     const guests = useAppSelector((state) => state.guests)
 
-    const updatePlayerName = (event) => {
+    const updatePlayerName: ChangeEventHandler<HTMLInputElement> = (event) => {
         setPlayerName(event.target.value);
     };
 
@@ -82,7 +89,7 @@ const PlayersAddPage: React.FC = () => {
         setPlayerName('')
     };
 
-    const addPlayerOnEnter = (event) => {
+    const addPlayerOnEnter: KeyboardEventHandler = (event) => {
         if (event.which === 13 || event.keyCode === 13) {
             addPlayer()
             return true;
@@ -94,12 +101,12 @@ const PlayersAddPage: React.FC = () => {
     const [playersToPlay, guestsToPlay, onHold] = getPlayersToPlay(players, guests)
     const playingPlayers = playersToPlay.concat(guestsToPlay)
 
-    const playingPlayersIds = _.reduce(playersToPlay, (acc, {id}) => {
+    const playingPlayersIds = _.reduce<PlayerWithId, Record<string, true>>(playersToPlay, (acc, {id}) => {
         acc[id] = true
 
         return acc
     }, {})
-    const playingGuestsIds = _.reduce(guestsToPlay, (acc, {id}) => {
+    const playingGuestsIds = _.reduce<PlayerWithId, Record<string, true>>(guestsToPlay, (acc, {id}) => {
         acc[id] = true
 
         return acc
@@ -110,7 +117,7 @@ const PlayersAddPage: React.FC = () => {
         removeAllGuests()
     }
 
-    const copyToClipboard = (playingPlayers, onHold) => {
+    const copyToClipboard = (playingPlayers: Array<PlayerWithId>, onHold: Array<PlayerWithId>) => {
         const message = [
             `מגיעים (${playingPlayers.length}):`,
             playingPlayers.map(p => p.name).join(', '),
@@ -128,11 +135,15 @@ const PlayersAddPage: React.FC = () => {
 
     }
 
-    const handleCloseAlert = (event, reason) => {
+    const handleCloseSnackbar: SnackbarProps['onClose'] = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
 
+        setCopiedAlertOpen(false)
+    };
+
+    const handleCloseAlert: AlertProps['onClose'] = () => {
         setCopiedAlertOpen(false)
     };
 
@@ -172,7 +183,7 @@ const PlayersAddPage: React.FC = () => {
             >
                 <LibraryBooksIcon/>
             </Fab>
-            <Snackbar open={copiedAlertOpen} autoHideDuration={6000} onClose={handleCloseAlert}>
+            <Snackbar open={copiedAlertOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseAlert} severity="info">
                     ההודעה הועתקה
                 </Alert>
