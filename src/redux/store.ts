@@ -1,7 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit'
-// import { createStore, combineReducers, applyMiddleware } from 'redux';
-//
-// import thunk from 'redux-thunk';
 
 import playersReducer from './reducers/playersReducer';
 import guestsReducer from './reducers/guestsReducer';
