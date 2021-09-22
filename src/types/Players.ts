@@ -1,5 +1,5 @@
 export type Player = {
-    credit: number
+    credits: number
     arrived: boolean
     name: string
 }

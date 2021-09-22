@@ -1,7 +1,14 @@
 import React, {useState} from 'react';
 import _ from 'lodash'
-import { useSelector } from 'react-redux'
-import {pushPlayer, pushGuest, removePlayer, removeGuest, removeAllPlayers, removeAllGuests} from '../utils/playersDBUtils'
+import {
+    pushPlayer,
+    pushGuest,
+    removePlayer,
+    removeGuest,
+    removeAllPlayers,
+    removeAllGuests,
+    getNewPlayerData
+} from '../utils/playersDBUtils'
 import Layout from './Layout'
 import AddPlayer from './AddPlayer'
 import PlayersList from './PlayersList'
@@ -11,7 +18,7 @@ import Fab from '@material-ui/core/Fab';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 import MuiAlert from '@material-ui/lab/Alert';
-import {Player} from "../types/Players";
+import { useAppSelector } from './hooks/reduxHooks';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -56,17 +63,12 @@ const getPlayersToPlay = (players, guests) => {
     }
 }
 
-type StoreState = {
-    players: Record<string, Player>
-    guests: Record<string, Player>
-}
-
 const PlayersAddPage: React.FC = () => {
     const [playerName, setPlayerName] = useState<string>('')
     const [copiedAlertOpen, setCopiedAlertOpen] = useState<boolean>(false)
 
-    const players = useSelector<StoreState, StoreState['players']>((state) => state.players)
-    const guests = useSelector<StoreState, StoreState['guests']>((state) => state.guests)
+    const players = useAppSelector((state) => state.players)
+    const guests = useAppSelector((state) => state.guests)
 
     const updatePlayerName = (event) => {
         setPlayerName(event.target.value);
@@ -74,8 +76,8 @@ const PlayersAddPage: React.FC = () => {
 
     const addPlayer = () => {
         const [players, guests] = getPlayersToAdd(playerName)
-        _.forEach(players, playerName => pushPlayer({name: playerName}))
-        _.forEach(guests, guestName => pushGuest({name: guestName}))
+        _.forEach(players, playerName => pushPlayer(getNewPlayerData(playerName)))
+        _.forEach(guests, guestName => pushGuest(getNewPlayerData(guestName)))
 
         setPlayerName('')
     };

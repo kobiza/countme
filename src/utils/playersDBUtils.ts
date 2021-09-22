@@ -1,21 +1,23 @@
-import _ from 'lodash';
 import * as DAL from './DAL';
+import {Player} from "../types/Players";
 
-const _pushPlayer = (listName) => (playerData) => {
-    const defaults = {
-        payed: 0,
-        arrived: false
-    };
-    const newPlayer = _.defaults(playerData, defaults);
+export const getNewPlayerData = (name: string): Player => {
+    return {
+        credits: 0,
+        arrived: false,
+        name
+    }
+}
 
+const _pushPlayer = (listName: string) => (newPlayer: Player) => {
     return DAL.push(`/${listName}/`, newPlayer);
 };
 
-const _removePlayer = (listName) => (playerId) => {
+const _removePlayer = (listName: string) => (playerId: string) => {
     return DAL.setIn(`/${listName}/` + playerId, null);
 };
 
-const _removeAllPlayers = (listName) => () => {
+const _removeAllPlayers = (listName: string) => () => {
     return DAL.remove(`/${listName}/`);
 };
 

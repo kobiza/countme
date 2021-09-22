@@ -1,10 +1,9 @@
 import React from 'react';
 
 import {Provider} from 'react-redux';
-import makeStore from '../redux/makeStore';
+import {store} from '../redux/store';
 import App from './App';
 
-const store = makeStore();
 
 const AppWrapper: React.FC = () => {
     return (

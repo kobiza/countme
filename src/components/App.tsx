@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
 import Players from './PlayersAddPage'
-import { useDispatch } from 'react-redux';
 import RTL from './hoc/RTL';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import {listenToPlayers} from '../redux/actions/playersAsyncActions'
 import {listenToGuests} from '../redux/actions/guestsAsyncActions'
+import {useAppDispatch} from "./hooks/reduxHooks";
 
 const App: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(listenToPlayers())
