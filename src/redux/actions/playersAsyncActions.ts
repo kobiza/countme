@@ -1,16 +1,14 @@
-'use strict';
+"use strict";
 
-import {
-    onValue,
-} from "../../utils/generalDBUtils";
+import { onValue } from "../../utils/generalDBUtils";
 import * as actionTypes from "./actionTypes";
-import {Player} from "../../types/Players";
+import { Player } from "../../types/Players";
 
 const playersReceived = (players: Record<string, Player>) => {
-    return {
-        type: actionTypes.PLAYERS_RECEIVED,
-        players
-    };
+  return {
+    type: actionTypes.PLAYERS_RECEIVED,
+    players,
+  };
 };
 
-export const listenToPlayers  = () => onValue('/players', playersReceived);
+export const listenToPlayers = () => onValue("/players", playersReceived);
