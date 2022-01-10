@@ -1,2 +1,1 @@
-# newBoilerplate
-# countme
+# countme - app to count players
